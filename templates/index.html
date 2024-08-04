@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
+    <div class="container mx-auto px-4">
+        <h1 class="text-4xl font-bold text-center mb-8">Search</h1>
+        
+        <div class="max-w-2xl mx-auto">
+            <form class="mb-8">
+                <div class="flex">
+                    <input type="text" placeholder="Enter your search query" class="w-full px-4 py-2 rounded-l-lg border-2 border-gray-300 focus:outline-none focus:border-blue-500">
+                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-r-lg hover:bg-blue-600 transition duration-300">Search</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="max-w-2xl mx-auto">
+            <h2 class="text-xl font-semibold mb-2">Recent Papers</h2>
+            <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+                <ul class="divide-y divide-gray-200">
+                    {% for paper in history %}
+                    <li class="px-4 py-2 hover:bg-gray-50">
+                        <a href="/paper/{{ paper.id }}" class="block">
+                            <p class="text-sm font-medium text-gray-900">{{ paper.title }}</p>
+                            <p class="text-xs text-gray-500">{{ paper.created_date.strftime('%Y-%m-%d') }}</p>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
