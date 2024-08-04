@@ -37,5 +37,15 @@ def list(list_id):
 def paper(paper_id):
     return render_template('paper.html', paper=ArxivPaper.query.filter_by(id=paper_id).first())
 
+
+@app.route('/search')
+def search():
+    query = request.args.get('query')
+    print('search_query: ', query)
+    print(request.form)
+    search_results = ArxivPaper.query.filter(ArxivPaper.title.ilike(f'%{query}%')).limit(20).all()
+    
+    return render_template('search_results_view.html', results=search_results, query=query)
+
 if __name__ == '__main__':
     app.run(debug=True)

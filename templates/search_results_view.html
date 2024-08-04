@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'base.html' %}
+
+{% include 'search.html' %}
+
+<div class="max-w-2xl mx-auto">
+    <h2 class="text-xl font-semibold mb-2">Search Results</h2>
+    <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+        <ul class="divide-y divide-gray-200">
+            {% for paper in results %}
+            <li class="px-4 py-2 hover:bg-gray-50">
+                <a href="/paper/{{ paper.id }}" class="block">
+                    <p class="text-sm font-medium text-gray-900">{{ paper.title }}</p>
+                    <p class="text-xs text-gray-500">{{ paper.created_date.strftime('%Y-%m-%d') }}</p>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+</div>
+</html>
