@@ -25,11 +25,11 @@
             {% if list.papers %}
                 <ul class="bg-white shadow-lg rounded-lg overflow-hidden">
                     {% for paper in list.papers %}
-                        <li class="border-b border-gray-200 last:border-b-0">
+                        <li class="border-b border-gray-200 last:border-b-0" id="paper-{{ paper.id }}">
                             <a href="#" onclick="updatePdfViewer('{{ paper.id }}')" class="block p-4 hover:bg-gray-50 transition duration-150 ease-in-out">
-                                <h3 class="text-lg font-semibold text-gray-800">{{ paper.title }}</h3>
-                                <p class="text-sm text-gray-600 mt-1">{{ paper.authors }}</p>
-                                <p class="text-xs text-gray-500 mt-1">{{ paper.published_date.strftime('%Y-%m-%d') }}</p>
+                                <h3 class="text-md font-semibold text-gray-800">{{ paper.title }}</h3>
+                                <!-- <p class="text-sm text-gray-600 mt-1">{{ paper.authors }}</p> -->
+                                <p class="text-xs text-gray-500 mt-1">{{ paper.created_date.strftime('%Y-%m-%d') }}</p>
                             </a>
                         </li>
                     {% endfor %}
@@ -43,7 +43,19 @@
     <script>
         function updatePdfViewer(paperId) {
             document.querySelector('iframe').src = `https://arxiv.org/pdf/${paperId}.pdf`;
+            // Remove highlight from previously selected paper
+            document.querySelector('.bg-blue-100')?.classList.remove('bg-blue-100');
+            // Highlight the current paper
+            document.getElementById(`paper-${paperId}`).classList.add('bg-blue-100');
         }
+
+        // Highlight the first paper on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstPaper = document.querySelector('li[id^="paper-"]');
+            if (firstPaper) {
+                firstPaper.classList.add('bg-blue-100');
+            }
+        });
     </script>
 </body>
 

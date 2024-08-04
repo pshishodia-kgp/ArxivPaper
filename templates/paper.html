@@ -1,1 +1,46 @@
-<iframe src="https://arxiv.org/pdf/{{ paper.id }}.pdf" width="50%" height="100%" frameborder="0" scrolling="auto"></iframe>
+<div class="flex h-screen">
+    <div class="w-1/2">
+        <iframe src="https://arxiv.org/pdf/{{ paper.id }}.pdf" width="50%" height="100%" frameborder="0" scrolling="auto"></iframe>
+    </div>
+    <div class="w-1/2 p-4 flex justify-end">
+        <div>
+            <button id="addToListBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Add to List
+            </button>
+            <div id="listDropdown" class="hidden mt-2 w-64 bg-white rounded-md shadow-xl">
+                {% for list in lists %}
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="addToList('{{ list.id }}', '{{ paper.id }}')">
+                        {{ list.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('addToListBtn').addEventListener('click', function() {
+        document.getElementById('listDropdown').classList.toggle('hidden');
+    });
+
+    function addToList(listId, paperId) {
+        fetch(`/add_to_list?list_id=${listId}&paper_id=${paperId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Paper added to list successfully!');
+            } else {
+                alert('Failed to add paper to list.');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the paper to the list.');
+        });
+    }
+</script>

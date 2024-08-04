@@ -35,7 +35,7 @@ def list(list_id):
     
 @app.route('/paper/<string:paper_id>')
 def paper(paper_id):
-    return render_template('paper.html', paper=ArxivPaper.query.filter_by(id=paper_id).first())
+    return render_template('paper.html', paper=ArxivPaper.query.filter_by(id=paper_id).first(), lists = List.query.filter_by(owner_username=user.username).all())
 
 
 @app.route('/search')
@@ -46,6 +46,22 @@ def search():
     search_results = ArxivPaper.query.filter(ArxivPaper.title.ilike(f'%{query}%')).limit(20).all()
     
     return render_template('search_results_view.html', results=search_results, query=query)
+
+@app.route('/add_to_list', methods=['GET'])
+def add_to_list():
+    list_id, paper_id = request.args.get('list_id'), request.args.get('paper_id')
+    print('list_id, paper_id : ', list_id, paper_id)
+    
+    # Add the paper to the list
+    list_obj = List.query.get(list_id)
+    paper = ArxivPaper.query.get(paper_id)
+    
+    if list_obj and paper:
+        list_obj.papers.append(paper)
+        db.session.commit()
+        return jsonify({'success': True}), 200
+    else:
+        return jsonify({'success': False, 'message': 'List or paper not found'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
