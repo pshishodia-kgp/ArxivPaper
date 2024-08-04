@@ -26,8 +26,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arxiv_papers.db'
 db.init_app(app)
 
 # Create the database tables
-with app.app_context():
-    db.create_all()
+def recreate_database():
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+        db.session.commit()
     
 def get_papers():
     new_papers = []
@@ -51,7 +54,7 @@ def get_papers():
     return new_papers
 
     
-def add_arxiv_papers():
+def commit_arxiv_papers():
     new_papers = get_papers()
     with app.app_context():
         Session = sessionmaker(bind=db.engine)
@@ -71,3 +74,5 @@ def add_arxiv_papers():
             print(f"An error occurred: {e}")
         finally:
             session.close()
+recreate_database()    
+commit_arxiv_papers()
